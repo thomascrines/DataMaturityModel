@@ -1,4 +1,5 @@
 library(shiny)
+library(fmsb)
 
 question_1 <- "What does data management mean to your team?"
 question_2 <- "Does your team have robust data management governance in place?"
@@ -12,6 +13,11 @@ question_7 <- "How do you import data into your tools?"
 ui <- fluidPage(
     
     titlePanel("Data Management Maturity Model"),
+    
+    fluidRow(
+        textInput("name", "Name:"),
+        textInput("team", "Team:")
+        ),
     
     fluidRow(
         mainPanel(
@@ -96,10 +102,12 @@ ui <- fluidPage(
                                           "Level 5: We have fully automated processes that are managed by a specialist team"  
                                       ), 
                                       width = "100%", selected = character(0)),
-                         actionButton("submit", "Submit")
+                         downloadButton("download", "Download Results")
                          
                 ),
                 tabPanel("Results",
+                         h4(textOutput("name")),
+                         h4(textOutput("team")),
                          h4(question_1),
                          h4(textOutput("answer_1")),
                          h4(question_2),
@@ -113,7 +121,8 @@ ui <- fluidPage(
                          h4(question_6),
                          h4(textOutput("answer_6")),
                          h4(question_7),
-                         h4(textOutput("answer_7"))
+                         h4(textOutput("answer_7")),
+                         plotOutput("radarPlot")
                          )
             )
             
@@ -122,6 +131,14 @@ ui <- fluidPage(
 )
 
 server <- function(input, output) {
+    
+    output$name <- renderText({
+        input$name
+    })
+    
+    output$team <- renderText({
+        input$team
+    })
     
     output$answer_1 <- renderText({
         input$submit
@@ -157,6 +174,47 @@ server <- function(input, output) {
         input$submit
         input$question_7
     })
+    
+    output$radarPlot <- renderPlot({
+        
+        data <- data.frame(
+            "Data Management Awareness" = strtoi(substr(input$question_1, 7, 7)), 
+            "Data Management Governance" = strtoi(substr(input$question_2, 7, 7)), 
+            "Metadata" = strtoi(substr(input$question_3, 7, 7)), 
+            "Storage and Security" = strtoi(substr(input$question_4, 7, 7)), 
+            "Retention and Versioning" = strtoi(substr(input$question_5, 7, 7)), 
+            "Data Sharing" = strtoi(substr(input$question_6, 7, 7)), 
+            "Data Processing" = strtoi(substr(input$question_7, 7, 7))
+        )
+        
+        data <- rbind(rep(5,7), rep(0,7), data)
+        
+        radarchart(data)
+    })
+    
+    output$download <- downloadHandler(
+        filename = "download.html",
+        content = function(file) {
+        tempReport = file.path(tempdir(), "report.Rmd")
+        file.copy("download_report.Rmd", tempReport, overwrite = TRUE)
+        params <- list(answer_1 = input$question_1,
+                       answer_2 = input$question_2,
+                       answer_3 = input$question_3,
+                       answer_4 = input$question_4,
+                       answer_5 = input$question_5,
+                       answer_6 = input$question_6,
+                       answer_7 = input$question_7,
+                       name = input$name,
+                       team = input$team
+                       )
+        rmarkdown::render(tempReport, output_file = file,
+                          params = params,
+                          envir = new.env(parent = globalenv())
+        )
+        
+        }
+        
+        )
 }
 
 shinyApp(ui = ui, server = server)
