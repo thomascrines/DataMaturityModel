@@ -1,5 +1,6 @@
 library(shiny)
 library(fmsb)
+library(shinythemes)
 
 question_1 <- "What does data management mean to your team?"
 question_2 <- "Does your team have robust data management governance in place?"
@@ -10,7 +11,7 @@ question_6 <- "How does your team share data?"
 question_7 <- "How do you import data into your tools?"
 
 
-ui <- fluidPage(
+ui <- fluidPage(theme = shinytheme("flatly"),
     
     titlePanel("Data Management Maturity Model"),
     
