@@ -15,45 +15,45 @@ params:
 ---
 
 ```{r, setup, include=FALSE}
-knitr::opts_chunk$set(echo = params$printcode)
+knitr::opts_chunk$set(echo = params$printcode, comment = NA)
 ```
 
 Name
  ```{r}
- params$name
+ cat(params$name)
  ```
 Team
  ```{r}
- params$team
+cat(params$team)
  ```
 
 Data Management Awareness
  ```{r}
- params$answer_1
+ cat(params$answer_1)
  ```
 Data Management Governance
  ```{r}
- params$answer_2
+ cat(params$answer_2)
  ```
 Metadata
  ```{r}
- params$answer_3
+ cat(params$answer_3)
  ```
 Storage and Security
  ```{r}
- params$answer_4
+ cat(params$answer_4)
  ```
 Retention and Versioning
  ```{r}
- params$answer_5
+ cat(params$answer_5)
  ```
 Data Sharing 
  ```{r}
- params$answer_6
+ cat(params$answer_6)
  ```
 Data Processing
  ```{r}
- params$answer_7
+ cat(params$answer_7)
  ```
  
  Chart
