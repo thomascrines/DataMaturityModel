@@ -1,6 +1,5 @@
 ---
 title: "Data Maturity Model"
-output: html_document
 params:
   answer_1: NA
   answer_2: NA
@@ -10,12 +9,17 @@ params:
   answer_6: NA
   answer_7: NA
   name: NA
+  printcode: no
   team: NA
-  printcode: false
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r, setup, include=FALSE}
 knitr::opts_chunk$set(echo = params$printcode, comment = NA)
+library(dplyr)
+library(plotly)
 ```
 
 Name
@@ -57,18 +61,32 @@ Data Processing
  ```
  
  Chart
- ```{r echo = FALSE}
- data <- data.frame(
-            "Data Management Awareness" = strtoi(substr(params$answer_1[1], 7, 7)), 
-            "Data Management Governance" = strtoi(substr(params$answer_2[1], 7, 7)), 
-            "Metadata" = strtoi(substr(params$answer_3[1], 7, 7)), 
-            "Storage and Security" = strtoi(substr(params$answer_4[1], 7, 7)), 
-            "Retention and Versioning" = strtoi(substr(params$answer_5[1], 7, 7)), 
-            "Data Sharing" = strtoi(substr(params$answer_6[1], 7, 7)), 
-            "Data Processing" = strtoi(substr(params$answer_7[1], 7, 7))
-        )
-        
-        data <- rbind(rep(5,7), rep(0,7), data)
-        
-        fmsb::radarchart(data)
+ ```{r echo = FALSE, warnings = FALSE}
+
+       plotly::plot_ly(
+            type = "scatterpolar",
+            mode = "lines",
+            r = c(strtoi(substr(params$answer_1[1], 7, 7)), 
+                  strtoi(substr(params$answer_2[1], 7, 7)), 
+                  strtoi(substr(params$answer_3[1], 7, 7)), 
+                  strtoi(substr(params$answer_4[1], 7, 7)), 
+                  strtoi(substr(params$answer_5[1], 7, 7)), 
+                  strtoi(substr(params$answer_6[1], 7, 7)), 
+                  strtoi(substr(params$answer_7[1], 7, 7))
+                  ),
+            theta = c("Data Management Awareness", 
+                      "Data Management Governance", 
+                      "Metadata", 
+                      "Storage and Security", 
+                      "Retention and Versioning", 
+                      "Data Sharing", 
+                      "Data Processing"),
+            fill = "toself"
+        ) %>% layout(polar = list(radialaxis = list(visible = T,
+        range = c(0,5)
+                        )
+                ),
+                showlegend = F
+            )
+
  ```

@@ -1,6 +1,7 @@
 library(shiny)
 library(fmsb)
 library(shinythemes)
+library(plotly)
 
 question_1 <- "What does data management mean to your team?"
 question_2 <- "Does your team have robust data management governance in place?"
@@ -11,19 +12,23 @@ question_6 <- "How does your team share data?"
 question_7 <- "How do you import data into your tools?"
 
 
-ui <- fluidPage(theme = shinytheme("flatly"),
+ui <- fluidPage(
     
-    titlePanel("Data Management Maturity Model"),
+    includeCSS("styles.css"),
+    
+    headerPanel(
+        column(10, offset = 1, "Data Management Maturity Model")
+        ),
     
     fluidRow(
-        textInput("name", "Name:"),
-        textInput("team", "Team:")
+        column(2, offset = 1, textInput("name", "Name:")),
+        column(2, textInput("team", "Team:"))
     ),
     
     fluidRow(
+        column(10, offset = 1,
         mainPanel(
-            tabsetPanel(
-                tabPanel("Questions",
+            
                          h2("Data Management Awareness"),
                          h4("Familiarity with data management principles for using and retaining data."),
                          radioButtons("question_1", question_1, 
@@ -105,92 +110,14 @@ ui <- fluidPage(theme = shinytheme("flatly"),
                                       width = "100%", selected = character(0)),
                          downloadButton("download", "Download Results")
                          
-                ),
-                tabPanel("Results",
-                         h4(textOutput("name")),
-                         h4(textOutput("team")),
-                         h4(question_1),
-                         h4(textOutput("answer_1")),
-                         h4(question_2),
-                         h4(textOutput("answer_2")),
-                         h4(question_3),
-                         h4(textOutput("answer_3")),
-                         h4(question_4),
-                         h4(textOutput("answer_4")),
-                         h4(question_5),
-                         h4(textOutput("answer_5")),
-                         h4(question_6),
-                         h4(textOutput("answer_6")),
-                         h4(question_7),
-                         h4(textOutput("answer_7")),
-                         plotOutput("radarPlot")
-                )
-            )
+               
+            
+        )
         )
     )
 )
 
 server <- function(input, output) {
-    
-    output$name <- renderText({
-        input$name
-    })
-    
-    output$team <- renderText({
-        input$team
-    })
-    
-    output$answer_1 <- renderText({
-        input$submit
-        input$question_1
-    })
-    
-    output$answer_2 <- renderText({
-        input$submit
-        input$question_2
-    })
-    
-    output$answer_3 <- renderText({
-        input$submit
-        input$question_3
-    })
-    
-    output$answer_4 <- renderText({
-        input$submit
-        input$question_4
-    })
-    
-    output$answer_5 <- renderText({
-        input$submit
-        input$question_5
-    })
-    
-    output$answer_6 <- renderText({
-        input$submit
-        input$question_6
-    })
-    
-    output$answer_7 <- renderText({
-        input$submit
-        input$question_7
-    })
-    
-    output$radarPlot <- renderPlot({
-        
-        data <- data.frame(
-            "Data Management Awareness" = strtoi(substr(input$question_1, 7, 7)), 
-            "Data Management Governance" = strtoi(substr(input$question_2, 7, 7)), 
-            "Metadata" = strtoi(substr(input$question_3, 7, 7)), 
-            "Storage and Security" = strtoi(substr(input$question_4, 7, 7)), 
-            "Retention and Versioning" = strtoi(substr(input$question_5, 7, 7)), 
-            "Data Sharing" = strtoi(substr(input$question_6, 7, 7)), 
-            "Data Processing" = strtoi(substr(input$question_7, 7, 7))
-        )
-        
-        data <- rbind(rep(5,7), rep(0,7), data)
-        
-        radarchart(data)
-    })
     
     output$download <- downloadHandler(
         filename = "download.html",
