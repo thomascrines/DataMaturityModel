@@ -1,5 +1,5 @@
 ---
-title: "Data Maturity Model"
+title: "Data Management Maturity Model"
 params:
   answer_1: NA
   answer_2: NA
@@ -66,27 +66,22 @@ Data Processing
        plotly::plot_ly(
             type = "scatterpolar",
             mode = "lines",
-            r = c(strtoi(substr(params$answer_1[1], 7, 7)), 
+            r = c(strtoi(substr(params$answer_3[1], 7, 7)),
                   strtoi(substr(params$answer_2[1], 7, 7)), 
-                  strtoi(substr(params$answer_3[1], 7, 7)), 
-                  strtoi(substr(params$answer_4[1], 7, 7)), 
-                  strtoi(substr(params$answer_5[1], 7, 7)), 
+                  strtoi(substr(params$answer_1[1], 7, 7)), 
+                  strtoi(substr(params$answer_7[1], 7, 7)),
                   strtoi(substr(params$answer_6[1], 7, 7)), 
-                  strtoi(substr(params$answer_7[1], 7, 7))
+                  strtoi(substr(params$answer_5[1], 7, 7)), 
+                  strtoi(substr(params$answer_4[1], 7, 7))
                   ),
-            theta = c("Data Management Awareness", 
+                    theta = c("Metadata",
                       "Data Management Governance", 
-                      "Metadata", 
-                      "Storage and Security", 
+                      "Data Management Awareness",
+                      "Data Processing",
+                      "Data Sharing",
                       "Retention and Versioning", 
-                      "Data Sharing", 
-                      "Data Processing"),
+                      "Storage and Security"),
             fill = "toself"
-        ) %>% layout(polar = list(radialaxis = list(visible = T,
-        range = c(0,5)
-                        )
-                ),
-                showlegend = F
-            )
+        ) %>% layout(polar = list(radialaxis = list(visible = T,range = c(0,5))), showlegend = F, margin = list(r = 50, l = 50))
 
  ```
